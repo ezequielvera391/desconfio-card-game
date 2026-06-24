@@ -17,3 +17,16 @@ func _init(_suit: Suit, _value: int):
 
 func get_display_name() -> String:
 	return "%s de %s" % [str(value), Suit.keys()[suit]]
+
+static func get_suit_name(suit: Suit) -> String:
+	match suit:
+		Suit.ORO:
+			return "Oro"
+		Suit.COPA:
+			return "Copa"
+		Suit.ESPADA:
+			return "Espada"
+		Suit.BASTO:
+			return "Basto"
+		_:
+			return "-"

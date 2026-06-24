@@ -22,11 +22,41 @@ var current_turn: Turn
 var current_declared_suit: Card.Suit
 var previous_declared_suit: Card.Suit
 
+signal game_initialized
+signal game_state_changed
+
+# El singleton GameScreen llama a gameManager.start_game() cuando termina de cargar
 func _ready():
-	start_game()
+	pass
 	
 func start_game():
-	run_hardcoded_test()
+	current_state = GameState.SETUP # asignación interna, sin emitir
+	setup_game()
+	game_initialized.emit()
+	
+	# Esto es instantaneo luego tendrá una animación y probablemente tenga que esperar
+	change_state(GameState.DEALING)
+	deal_all_cards()
+	
+	change_state(GameState.PLAYER_TURN)
+	
+func setup_game() -> void:
+	player = Player.new("Jugador", Player.PlayerType.HUMAN)
+	ai = Player.new("Máquina", Player.PlayerType.AI)
+	table_pile = TablePile.new()
+	deck = create_spanish_deck()
+	deck.shuffle()
+
+	last_play = null
+	
+	# Por ahora siempre va a iniciar el Player
+	current_turn = Turn.new(player)
+
+	# TEMP: Acá lo inicio manualmente pero debe ser el primer jugador el que elija que palo jugar
+	current_declared_suit = Card.Suit.ESPADA
+	previous_declared_suit = current_declared_suit
+
+	print("Partida creada.")
 	
 func create_spanish_deck() -> Deck:
 	var new_deck := Deck.new()
@@ -59,6 +89,7 @@ func deal_all_cards():
 func change_state(new_state: GameState):
 	current_state = new_state
 	print("Nuevo estado:", GameState.keys()[current_state])
+	game_state_changed.emit()
 	
 func resolve_challenge(challenger: Player) -> void:
 	var loser: Player
@@ -118,67 +149,3 @@ func print_status() -> void:
 	print("Jugador:", player.card_count())
 	print("Máquina:", ai.card_count())
 	print("Pozo:", table_pile.count())
-	
-func run_hardcoded_test() -> void:
-	print("--- PARTIDA HARDCODEADA DESCONFÍO ---")
-
-	change_state(GameState.SETUP)
-
-	player = Player.new("Jugador", Player.PlayerType.HUMAN)
-	ai = Player.new("Máquina", Player.PlayerType.AI)
-	table_pile = TablePile.new()
-
-	print("Partida creada.")
-
-	change_state(GameState.DEALING)
-
-	var p1 := Card.new(Card.Suit.ESPADA, 1)
-	var p2 := Card.new(Card.Suit.ORO, 5)
-	var p3 := Card.new(Card.Suit.COPA, 7)
-
-	var a1 := Card.new(Card.Suit.ESPADA, 2)
-	var a2 := Card.new(Card.Suit.COPA, 3)
-	var a3 := Card.new(Card.Suit.BASTO, 4)
-
-	player.hand.add_cards([p1, p2, p3])
-	ai.hand.add_cards([a1, a2, a3])
-
-	print("Se reparten 3 cartas a cada jugador.")
-	print_status()
-
-	current_declared_suit = Card.Suit.ESPADA
-	print("Ronda inicial. Palo declarado:", Card.Suit.keys()[current_declared_suit])
-
-	change_state(GameState.PLAYER_TURN)
-	play_card(player, p1, current_declared_suit)
-
-	change_state(GameState.AI_TURN)
-	play_card(ai, a1, current_declared_suit)
-
-	change_state(GameState.PLAYER_TURN)
-	play_card(player, p2, current_declared_suit)
-
-	change_state(GameState.RESOLVING_CHALLENGE)
-	resolve_challenge(ai)
-
-	previous_declared_suit = current_declared_suit
-	current_declared_suit = Card.Suit.COPA
-
-	print("Nueva ronda iniciada por Jugador.")
-	print("Palo anterior:", Card.Suit.keys()[previous_declared_suit], " | Nuevo palo:", Card.Suit.keys()[current_declared_suit])
-
-	change_state(GameState.PLAYER_TURN)
-	play_card(player, p3, current_declared_suit)
-
-	change_state(GameState.AI_TURN)
-	play_card(ai, a2, current_declared_suit)
-
-	change_state(GameState.PLAYER_TURN)
-	var extra_player_card := player.hand.cards[0]
-	play_card(player, extra_player_card, current_declared_suit)
-
-	change_state(GameState.AI_TURN)
-	play_card(ai, a3, current_declared_suit)
-
-	change_state(GameState.CHECK_WIN)
-	check_win_condition()
