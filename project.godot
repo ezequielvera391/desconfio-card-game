@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="DesconfioCardGame"
+run/main_scene="uid://c8lymbid5kdqt"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*uid://dawwbmjfe1vxy"
 
 [display]
 
