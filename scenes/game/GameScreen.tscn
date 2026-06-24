@@ -1,8 +1,12 @@
 [gd_scene format=3 uid="uid://c8lymbid5kdqt"]
 
-[ext_resource type="Script" uid="uid://dawwbmjfe1vxy" path="res://scripts/core/game_manager.gd" id="1_6udbq"]
+[ext_resource type="PackedScene" uid="uid://1qyloblaf5ff" path="res://scenes/ui/TableView.tscn" id="1_6udbq"]
+[ext_resource type="Script" uid="uid://bhqywenfusp1f" path="res://scenes/game/GameScreen.gd" id="1_8ypt3"]
 
-[node name="GameScreen" type="Node2D" unique_id=1985345604]
+[node name="GameScreen" type="Control" unique_id=658032621]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8ypt3")
 
-[node name="GameManager" type="Node" parent="." unique_id=204225697]
-script = ExtResource("1_6udbq")
+[node name="TableView" parent="." unique_id=719058425 instance=ExtResource("1_6udbq")]
+layout_mode = 0
