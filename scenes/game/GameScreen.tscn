@@ -2,11 +2,19 @@
 
 [ext_resource type="PackedScene" uid="uid://1qyloblaf5ff" path="res://scenes/ui/TableView.tscn" id="1_6udbq"]
 [ext_resource type="Script" uid="uid://bhqywenfusp1f" path="res://scenes/game/GameScreen.gd" id="1_8ypt3"]
+[ext_resource type="PackedScene" uid="uid://bdi4cwipsk6se" path="res://scenes/ui/SuitSelectorView.tscn" id="3_056su"]
 
 [node name="GameScreen" type="Control" unique_id=658032621]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_8ypt3")
 
 [node name="TableView" parent="." unique_id=719058425 instance=ExtResource("1_6udbq")]
 layout_mode = 0
+
+[node name="SuitSelectorView" parent="." unique_id=876612364 instance=ExtResource("3_056su")]
+layout_mode = 1

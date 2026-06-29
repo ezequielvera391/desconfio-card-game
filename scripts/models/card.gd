@@ -18,8 +18,8 @@ func _init(_suit: Suit, _value: int):
 func get_display_name() -> String:
 	return "%s de %s" % [str(value), Suit.keys()[suit]]
 
-static func get_suit_name(suit: Suit) -> String:
-	match suit:
+static func get_suit_name(card_suit: Suit) -> String:
+	match card_suit:
 		Suit.ORO:
 			return "Oro"
 		Suit.COPA:
